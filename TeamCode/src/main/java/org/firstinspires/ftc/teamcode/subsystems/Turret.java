@@ -59,5 +59,3 @@ public class Turret implements EasySubsystem {
         turret_motor.setPositionPID(new PIDCoefficients(KP, KI, KD));
     }
 }
-
-
