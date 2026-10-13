@@ -45,7 +45,6 @@ public class Shooter implements EasySubsystem {
        // block_servo = new EasyServo(hardwareMap, "block_servo");
         //configurePIDF();
 
-
     }
 
     @Override
