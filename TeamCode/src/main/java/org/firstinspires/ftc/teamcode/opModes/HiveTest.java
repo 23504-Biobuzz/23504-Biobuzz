@@ -5,6 +5,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hiveVision.BallChaseFollower;
 import org.firstinspires.ftc.teamcode.hiveVision.BallTracker;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import dev.easyfamily.easystack.gamepad.EasyGamepad;
 
+@TeleOp(group = "Testes", name = "HiveTest")
 public class HiveTest extends OpMode {
 
     // Definindo
@@ -29,7 +31,7 @@ public class HiveTest extends OpMode {
     public void init()
     {
         // Pedro
-        follower = Constants.create(hardwareMap);
+        follower = Constants.create (hardwareMap);
         // Limelight
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(5);

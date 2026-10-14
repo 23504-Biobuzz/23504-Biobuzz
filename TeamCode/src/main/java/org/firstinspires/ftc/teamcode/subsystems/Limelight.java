@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ivy.Command;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -16,11 +17,11 @@ import dev.easyfamily.easystack.subsytem.EasySubsystem;
 
 public class Limelight implements EasySubsystem {
     // Limelight
-    public static Limelight3A limelight;
-    public static LLResult result;
-    public static String name = "limelight";
-    public static int pipeline = 5;
-    public static int pollRate = 50;
+    private static Limelight3A limelight;
+    private static LLResult result;
+    private static final String NAME = "limelight";
+    private static final int PIPELINE = 5;
+    private static final int POLL_RATE = 50;
 
     // Hive Vision
     BallTracker tracker;
@@ -30,9 +31,9 @@ public class Limelight implements EasySubsystem {
     public void init(HardwareMap hardwareMap)
     {
         // limelight
-        limelight = hardwareMap.get(Limelight3A.class, name);
-        limelight.pipelineSwitch(pipeline);
-        limelight.setPollRateHz(pollRate);
+        limelight = hardwareMap.get(Limelight3A.class, NAME);
+        limelight.pipelineSwitch(PIPELINE);
+        limelight.setPollRateHz(POLL_RATE);
         limelight.start();
 
         // tracker
@@ -45,11 +46,14 @@ public class Limelight implements EasySubsystem {
         chaser = new BallChaseFollower(follower, tracker, null);
         chaser.setAllowedClasses(BallTracker.CLASSES_ALL);
         chaser.setMaxPickups(4);
-        chaser.setTimeBudgetSec(20);
+        chaser.setTimeBudgetSec(5);
     }
 
-    public void setPipeline(int pipeline) { limelight.pipelineSwitch(pipeline); }
+    public void chasing() { chaser.update(); }
+    public void chaserStart() { chaser.start(); }
+    public boolean chaserIsDone() { return chaser.isDone(); }
 
+    public void setPipeline(int pipeline) { limelight.pipelineSwitch(pipeline); }
     public boolean seeingElement() { return result != null && result.isValid(); }
     public boolean seeingAprilTag() { return result != null && !result.getFiducialResults().isEmpty(); }
 
@@ -59,7 +63,21 @@ public class Limelight implements EasySubsystem {
         List<LLResultTypes.FiducialResult> aprilTags = new ArrayList<>();
 
         aprilTags.addAll(result.getFiducialResults());
-
         return aprilTags;
+    }
+
+    @Override
+    public void loop()
+    {
+        result = limelight.getLatestResult();
+    }
+
+    // Comandos
+    public Command chaserCommand()
+    {
+        return Command.build()
+                .setStart(this::chaserStart)
+                .setExecute(this::chasing)
+                .setDone(this::chaserIsDone);
     }
 }
