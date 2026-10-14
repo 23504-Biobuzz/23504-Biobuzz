@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.Tests;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,8 +8,18 @@ import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 import dev.easyfamily.easystack.gamepad.EasyGamepad;
 
+@Config
 @TeleOp(name = "ShooterTuner", group = "Tuner")
 public class ShooterTuner extends OpMode {
+
+
+    // Variaveis
+    public static double offset = 0;
+    public static double targetRpm = 0;
+
+    public static double hoodPose = 0;
+
+
 
 
     Shooter shooter = new Shooter();
@@ -29,6 +40,17 @@ public class ShooterTuner extends OpMode {
     @Override
     public void loop() {
         shooter.loop(); // atualizar o PID
+        shooter.ServoDoHood().setPosition(hoodPose);
+
+
+        if (gamepad.aToggle()){
+            shooter.unlockFeeder();
+        } else {
+            shooter.lockFeeder();
+        }
+
+
+
 
 
         if (gamepad.dpadRight()){
@@ -48,7 +70,7 @@ public class ShooterTuner extends OpMode {
 
 
         if (ActiveShooter) {
-            shooter.shootIt();
+            shooter.shootIt(targetRpm, offset);
         } else {
             shooter.offShooter();
         }
@@ -62,9 +84,10 @@ public class ShooterTuner extends OpMode {
 
 
 
-        telemetry.addData("Target Rpm", shooter.getTargetRpmDebug());
-        telemetry.addData("Actual Rpm", shooter.getActualRPMDebug());
-        telemetry.addData("Error", shooter.getShooterError() );
+        telemetry.addData("Target Rpm: ", targetRpm);
+        telemetry.addData("Actual Rpm: ", shooter.getActualRPMDebug());
+        telemetry.addData("Error: ", targetRpm - shooter.getActualRPMDebug() );
+        telemetry.addData("is Locked: ", shooter.islocked());
         telemetry.update();
     }
 }

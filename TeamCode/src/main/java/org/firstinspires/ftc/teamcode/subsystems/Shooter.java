@@ -21,15 +21,10 @@ public class Shooter implements EasySubsystem{
     EasyServo feeder;
 
 
-
     private InterpLUT shooterVelocity;
     private InterpLUT hoodPosition;
 
 
-
-    // Fine Adjust in Teleop
-    public double offset = 0;
-    public double targetRpm = 0;
 
 
     //PID
@@ -72,7 +67,8 @@ public class Shooter implements EasySubsystem{
 
 
 
-    public EasyServo ServoDoHood(){
+    public EasyServo ServoDoHood()
+    {
         return hoodServo;
     }
 
@@ -85,16 +81,10 @@ public class Shooter implements EasySubsystem{
 
 
 
-
-
-
-
     /** SHOOTER *//// /////////////////////////////////////////////////////////////
-
     /**
 
-     shooter.setRpm( getTargetInterluptRpm(robot.distanceToCell(x, y)) ) ;
-     shooter.shootIt();
+     shooter.shootIt( getTargetInterluptRpm(robot.distanceToCell(x, y)) );
 
 
      é só chamar isso e é gg
@@ -102,22 +92,14 @@ public class Shooter implements EasySubsystem{
      */
 
 
-    // RPM
-    public void setRPMOffset(double rpmOffset)
+
+
+    public void shootIt(double rpm, double offset)
     {
-        offset = rpmOffset;
+        shooterMotorMaster.setRPM(rpm + offset);
     }
 
 
-    public void setRpm(double rpm)
-    {
-        targetRpm = rpm + offset;
-    }
-
-    public void shootIt()
-    {
-        shooterMotorMaster.setRPM(targetRpm);
-    }
 
     public double getTargetInterluptRpm(double distance)
     {
@@ -134,29 +116,13 @@ public class Shooter implements EasySubsystem{
     }
 
 
+
     // TELEMETRY / DEBUG
 
     public double getActualRPMDebug()
     {
         return shooterMotorMaster.getRPM();
     }
-
-    public double getTargetRpmDebug()
-    {
-        return targetRpm;
-    }
-
-
-    public double getShooterError()
-    {
-        return (targetRpm - shooterMotorMaster.getRPM());
-    }
-
-    public double getOffsetDebug()
-    {
-        return offset;
-    }
-
 
 
 
@@ -172,7 +138,10 @@ public class Shooter implements EasySubsystem{
     }
 
 
-
+    public boolean islocked()
+    {
+       return feeder.getPosition() > 0.6;
+    }
 
 
 
