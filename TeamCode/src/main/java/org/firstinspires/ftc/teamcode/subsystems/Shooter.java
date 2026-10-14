@@ -42,10 +42,8 @@ public class Shooter implements EasySubsystem {
     @Override
     public void init(HardwareMap hardwareMap) {
         shooter_motor = new EasyMotor(hardwareMap, "shooter_motor", EasyMotorType.REV_HD_NAKED);
-       // block_servo = new EasyServo(hardwareMap, "block_servo");
+        // block_servo = new EasyServo(hardwareMap, "block_servo");
         //configurePIDF();
-
-
     }
 
     @Override
