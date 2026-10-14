@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.shootSystems;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import dev.easyfamily.easystack.control.PIDFCoefficients;
@@ -10,7 +11,7 @@ import dev.easyfamily.easystack.hardware.Motors.EasyMotorType;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 import dev.easyfamily.easystack.util.InterpLUT;
 
-
+@Config
 public class Shooter implements EasySubsystem{
 
     //Instancias
@@ -20,6 +21,8 @@ public class Shooter implements EasySubsystem{
 
     // Fine Adjust in Teleop
     public double offset = 0;
+
+    public double targetRpm = 0;
 
 
     //PID
@@ -51,16 +54,29 @@ public class Shooter implements EasySubsystem{
     }
 
 
-    public void setManualRpm(double targetRpm)
+    public void setRpm(double rpm)
     {
-        shooterMotorMaster.setRPM(targetRpm + offset);
+        targetRpm = rpm + offset;
+    }
+
+    public double getTargetInterluptRpm(double distance)
+    {
+        return shooterVelocity.get(distance);
     }
 
 
-    public void shootIt(double distance)
+
+    public void shootIt()
     {
-        setManualRpm(shooterVelocity.get(distance));
+       shooterMotorMaster.setRPM(targetRpm);
     }
+
+
+    // shooter.setRpm( getTargetInterluptRpm(robot.distanceToCell(x, y)) ) ;
+    // shooter.shootIt();
+
+    // é só chamar isso e é gg
+
 
 
     //GETTERS
@@ -78,15 +94,16 @@ public class Shooter implements EasySubsystem{
 
     public double getTargetRpmDebug()
     {
-        return shooterMotorMaster.getTargetRPM();
+        return targetRpm;
     }
 
 
-
-    public double getTargetInterluptRpmDebug(double distance)
+    public double getShooterError()
     {
-       return shooterVelocity.get(distance);
+        return (targetRpm - shooterMotorMaster.getRPM());
     }
+
+
 
 
 
@@ -95,12 +112,6 @@ public class Shooter implements EasySubsystem{
     {
         shooterMotorMaster.setPower(0);
     }
-
-
-
-
-
-
 
 
 
