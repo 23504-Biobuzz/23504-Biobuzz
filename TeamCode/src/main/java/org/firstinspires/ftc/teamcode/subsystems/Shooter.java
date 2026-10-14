@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.shootSystems;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 
 import com.acmerobotics.dashboard.config.Config;
@@ -8,6 +8,7 @@ import dev.easyfamily.easystack.control.PIDFCoefficients;
 import dev.easyfamily.easystack.feedforward.FFController;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotor;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotorType;
+import dev.easyfamily.easystack.hardware.Servo.EasyServo;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 import dev.easyfamily.easystack.util.InterpLUT;
 
@@ -16,12 +17,18 @@ public class Shooter implements EasySubsystem{
 
     //Instancias
     EasyMotor shooterMotorMaster;
+    EasyServo hoodServo;
+    EasyServo feeder;
+
+
 
     private InterpLUT shooterVelocity;
+    private InterpLUT hoodPosition;
+
+
 
     // Fine Adjust in Teleop
     public double offset = 0;
-
     public double targetRpm = 0;
 
 
@@ -34,9 +41,15 @@ public class Shooter implements EasySubsystem{
 
     @Override
     public void init(HardwareMap hardwareMap) {
+        lutShooter();
         shooterMotorMaster = new EasyMotor(hardwareMap, "shooterMaster", EasyMotorType.REV_HD_NAKED)
                 .reversed()
                 .floatMode();
+
+        hoodServo = new EasyServo(hardwareMap, "hood");
+
+        feeder = new EasyServo(hardwareMap, "feeder");
+
     }
 
 
@@ -47,7 +60,49 @@ public class Shooter implements EasySubsystem{
 
 
 
-    /** SETTERS */
+
+
+    /** HOOD *//// //////////////////////////////////////////////////////////
+
+    /**
+
+     ServoDoHood().setposition( servoPoseByInterlupt( robot.distanceToHive(x, y) ));
+
+     */
+
+
+
+    public EasyServo ServoDoHood(){
+        return hoodServo;
+    }
+
+
+    public double servoPoseByInterlupt(double distance)
+    {
+        return hoodPosition.get(distance);
+    }
+
+
+
+
+
+
+
+
+    /** SHOOTER *//// /////////////////////////////////////////////////////////////
+
+    /**
+
+     shooter.setRpm( getTargetInterluptRpm(robot.distanceToCell(x, y)) ) ;
+     shooter.shootIt();
+
+
+     é só chamar isso e é gg
+
+     */
+
+
+    // RPM
     public void setRPMOffset(double rpmOffset)
     {
         offset = rpmOffset;
@@ -59,6 +114,11 @@ public class Shooter implements EasySubsystem{
         targetRpm = rpm + offset;
     }
 
+    public void shootIt()
+    {
+        shooterMotorMaster.setRPM(targetRpm);
+    }
+
     public double getTargetInterluptRpm(double distance)
     {
         return shooterVelocity.get(distance);
@@ -66,26 +126,15 @@ public class Shooter implements EasySubsystem{
 
 
 
-    public void shootIt()
+
+    //OFF
+    public void offShooter()
     {
-       shooterMotorMaster.setRPM(targetRpm);
+        shooterMotorMaster.setPower(0);
     }
 
 
-    // shooter.setRpm( getTargetInterluptRpm(robot.distanceToCell(x, y)) ) ;
-    // shooter.shootIt();
-
-    // é só chamar isso e é gg
-
-
-
-    //GETTERS
-
-    public double getOffsetDebug()
-    {
-        return offset;
-    }
-
+    // TELEMETRY / DEBUG
 
     public double getActualRPMDebug()
     {
@@ -103,15 +152,25 @@ public class Shooter implements EasySubsystem{
         return (targetRpm - shooterMotorMaster.getRPM());
     }
 
-
-
-
-
-    //OFF
-    public void offShooter()
+    public double getOffsetDebug()
     {
-        shooterMotorMaster.setPower(0);
+        return offset;
     }
+
+
+
+
+    /** FEEDER *//// ///////////////////////////////////////////////////////
+
+
+    public void unlockFeeder(){
+        feeder.setPosition(0);
+    }
+
+    public void lockFeeder(){
+        feeder.setPosition(1);
+    }
+
 
 
 
@@ -131,8 +190,9 @@ public class Shooter implements EasySubsystem{
     }
 
 
+    /** LUTS *//////////////////////////////////////////////////////////
 
-    public void lut()
+    public void lutShooter()
     {
         shooterVelocity.add(0, 0);
         shooterVelocity.add(0, 0);
@@ -141,5 +201,19 @@ public class Shooter implements EasySubsystem{
         shooterVelocity.add(0, 0);
         shooterVelocity.createLUT();
     }
+
+
+    public void lutHood()
+    {
+        hoodPosition.add(0, 0);
+        hoodPosition.add(0, 0);
+        hoodPosition.add(0, 0);
+        hoodPosition.add(0, 0);
+        hoodPosition.add(0, 0);
+        hoodPosition.createLUT();
+    }
+
+
+
 
 }

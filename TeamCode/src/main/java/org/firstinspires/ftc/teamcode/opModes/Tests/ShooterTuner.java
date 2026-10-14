@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.opModes.Tests;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.shootSystems.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 import dev.easyfamily.easystack.gamepad.EasyGamepad;
 
@@ -65,7 +64,7 @@ public class ShooterTuner extends OpMode {
 
         telemetry.addData("Target Rpm", shooter.getTargetRpmDebug());
         telemetry.addData("Actual Rpm", shooter.getActualRPMDebug());
-        telemetry.addData("Error", (shooter.getTargetRpmDebug() - shooter.getActualRPMDebug() ));
+        telemetry.addData("Error", shooter.getShooterError() );
         telemetry.update();
     }
 }
