@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.shootSystems.Feeder;
+import org.firstinspires.ftc.teamcode.subsystems.shootSystems.Hood;
+import org.firstinspires.ftc.teamcode.subsystems.shootSystems.Shooter;
 
 import dev.easyfamily.easystack.gamepad.EasyGamepad;
 
@@ -12,17 +14,11 @@ import dev.easyfamily.easystack.gamepad.EasyGamepad;
 @TeleOp(name = "ShooterTuner", group = "Tuner")
 public class ShooterTuner extends OpMode {
 
-
-    // Variaveis
-    public static double offset = 0;
-    public static double targetRpm = 0;
-
-    public static double hoodPose = 0;
-
-
-
-
     Shooter shooter = new Shooter();
+
+    Hood hood = new Hood();
+
+    Feeder feeder = new Feeder();
 
     EasyGamepad gamepad = new EasyGamepad(gamepad1);
 
@@ -40,13 +36,13 @@ public class ShooterTuner extends OpMode {
     @Override
     public void loop() {
         shooter.loop(); // atualizar o PID
-        shooter.ServoDoHood().setPosition(hoodPose);
+
 
 
         if (gamepad.aToggle()){
-            shooter.unlockFeeder();
+            feeder.unlock();
         } else {
-            shooter.lockFeeder();
+            feeder.lock();
         }
 
 
@@ -70,10 +66,11 @@ public class ShooterTuner extends OpMode {
 
 
         if (ActiveShooter) {
-            shooter.shootIt(targetRpm, offset);
+            shooter.shootIt();
         } else {
             shooter.offShooter();
         }
+
 
         if (ActiveIntake){
             //Liga Intake
@@ -84,10 +81,10 @@ public class ShooterTuner extends OpMode {
 
 
 
-        telemetry.addData("Target Rpm: ", targetRpm);
-        telemetry.addData("Actual Rpm: ", shooter.getActualRPMDebug());
-        telemetry.addData("Error: ", targetRpm - shooter.getActualRPMDebug() );
-        telemetry.addData("is Locked: ", shooter.islocked());
+        telemetry.addData("Target Rpm: ", shooter.getTargetedRpm());
+        telemetry.addData("Actual Rpm: ", shooter.getActualRPM());
+        telemetry.addData("Error: ", shooter.getRpmError() );
+        telemetry.addData("is Locked: ", feeder.isLocked());
         telemetry.update();
     }
 }
