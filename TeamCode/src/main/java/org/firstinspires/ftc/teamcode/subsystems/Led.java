@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Prism.Color;
 import org.firstinspires.ftc.teamcode.Prism.Direction;
 import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
+import org.firstinspires.ftc.teamcode.utils.Colors;
 
 public class Led {
     Servo led;
@@ -25,11 +26,11 @@ public class Led {
 
 
     // Rgb Indicator
-    public Command off = instant(() -> led.setPosition(0));
-    public Command green = instant(() -> led.setPosition(0.500));
-    public Command red = instant(() -> led.setPosition(0.279));
-    public Command yellow = instant(() -> led.setPosition(0.388));
-    public Command orange = instant(() -> led.setPosition(0.333));
+    public Command off = instant(() -> led.setPosition(Colors.OFF));
+    public Command green = instant(() -> led.setPosition(Colors.GREEN));
+    public Command red = instant(() -> led.setPosition(Colors.RED));
+    public Command yellow = instant(() -> led.setPosition(Colors.YELLOW));
+    public Command orange = instant(() -> led.setPosition(Colors.ORANGE));
 
 
     public void setLedOff(){

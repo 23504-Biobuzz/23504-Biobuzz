@@ -15,6 +15,8 @@ public class teleOP extends OpMode {
     Robot robot = new Robot();
     Intake intake = new Intake();
     Shooter shooter = new Shooter();
+
+    double target = 0;
     EasyGamepad driver;
 
     @Override
@@ -43,6 +45,9 @@ public class teleOP extends OpMode {
         } else {
             shooter.offShooter();
         }
+
+        if (driver.y()) {target += 5; shooter.setTarget(target);}
+        if (driver.x()) {target -= 5; shooter.setTarget(target);}
 
         shooter.loop();
 

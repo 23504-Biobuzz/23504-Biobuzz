@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static dev.easyfamily.easystack.util.MathFunctions.normalizeAngle;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import dev.easyfamily.easystack.control.PIDCoefficients;
@@ -10,7 +9,6 @@ import dev.easyfamily.easystack.hardware.Motors.EasyMotor;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 import dev.easyfamily.easystack.util.Point;
 
-@Config
 public class Turret implements EasySubsystem {
 
     public static double KP = 0;

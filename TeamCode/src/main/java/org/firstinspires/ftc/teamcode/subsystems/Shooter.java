@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import dev.easyfamily.easystack.control.PIDFCoefficients;
@@ -11,7 +11,6 @@ import dev.easyfamily.easystack.hardware.Motors.EasyMotorType;
 import dev.easyfamily.easystack.hardware.Servo.EasyServo;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 
-@Config
 public class Shooter implements EasySubsystem {
 
     private EasyMotor shooter_motor;
@@ -19,7 +18,7 @@ public class Shooter implements EasySubsystem {
     public double currentRPM = 0.0;
     public double currentTicks = 0.0;
     public double errorRPM = 0.0;
-    public static double target = 0;
+    public static double target = 3000;
 
     public static double KP = 0.001;
     public static double KV = 0.00019;
@@ -54,5 +53,10 @@ public class Shooter implements EasySubsystem {
         errorRPM = shooter_motor.getRPMError();
 
         configurePIDF();
+    }
+
+    public void setTarget(double Target)
+    {
+        target = Target;
     }
 }

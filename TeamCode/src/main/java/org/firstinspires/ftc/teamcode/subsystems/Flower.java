@@ -9,7 +9,6 @@ import dev.easyfamily.easystack.hardware.Servo.EasyServoGroup;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 
 public class Flower implements EasySubsystem {
-
     private EasyServo servo_left;
     private EasyServo servo_right;
     private EasyServoGroup flower;
@@ -22,7 +21,6 @@ public class Flower implements EasySubsystem {
         servo_left = new EasyServo(hardwareMap, "servo_left");
         servo_right = new EasyServo(hardwareMap, "servo_right");
         flower = new EasyServoGroup(servo_left, servo_right);
-        currentPosition = 0;
     }
 
     public double getCurrentPosition(){
