@@ -12,17 +12,18 @@ import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.utils.Colors;
 
+import dev.easyfamily.easystack.hardware.Servo.EasyServo;
+
 public class Led {
-    Servo led;
+    EasyServo led;
     GoBildaPrismDriver prism;
 
     PrismState currentPrismState = null;
 
     public Led(){
-        led = hardwareMap.get(Servo.class, "led");
+        led = new EasyServo(hardwareMap, "led_back");
         prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
     }
-
 
 
     // Rgb Indicator

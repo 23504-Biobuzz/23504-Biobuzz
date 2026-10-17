@@ -26,7 +26,7 @@ public class Intake implements EasySubsystem {
     public boolean full = false;
     public boolean detected = false;
     private long detectedSince = -1;
-    private final long confirm = 300;
+    private final long confirm = 250;
     private static final double DETECTION_DISTANCE_CM = 2.75;
 
     public void onIntake() {
