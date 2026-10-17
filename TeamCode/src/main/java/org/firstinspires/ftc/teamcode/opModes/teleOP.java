@@ -50,8 +50,8 @@ public class teleOP extends OpMode {
             intake.offIntake();
         }
 
-        if (driver.y()) { target += 5; shooter.setTarget(target); }
-        if (driver.x()) { target -= 5; shooter.setTarget(target); }
+        if (driver.yPressed()) { target += 5; shooter.setTarget(target); }
+        if (driver.xPressed()) { target -= 5; shooter.setTarget(target); }
 
         shooter.loop();
 
