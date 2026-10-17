@@ -11,6 +11,7 @@ import dev.easyfamily.easystack.hardware.Servo.EasyServo;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 import dev.easyfamily.easystack.util.InterpLUT;
 
+
 public class Shooter implements EasySubsystem {
 
     private EasyMotor shooter_motor;
@@ -18,7 +19,7 @@ public class Shooter implements EasySubsystem {
     public double currentRPM = 0.0;
     public double currentTicks = 0.0;
     public double errorRPM = 0.0;
-    public static double target = 3000;
+    public static double target = 0;
 
     public static double KP = 0.001;
     public static double KV = 0.00019;
@@ -27,7 +28,7 @@ public class Shooter implements EasySubsystem {
     private InterpLUT shooterVelocity;
 
     public void onShooter() {
-        shooter_motor.setPower(1);
+        shooter_motor.setRPM(target);
     }
 
     public void offShooter() {
@@ -49,6 +50,11 @@ public class Shooter implements EasySubsystem {
         shooterVelocity.add(120, 3000);
         shooterVelocity.add(140, 3200);
         shooterVelocity.createLUT();
+    }
+
+    public void setTarget(double rpm)
+    {
+        target = rpm;
     }
 
     @Override

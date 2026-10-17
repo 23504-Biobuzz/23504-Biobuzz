@@ -20,6 +20,8 @@ public class teleOP extends OpMode {
     Shooter shooter = new Shooter();
     EasyGamepad driver;
 
+    double target = 0;
+    
     @Override
     public void init() {
         follower = Constants.create(hardwareMap);
@@ -36,25 +38,31 @@ public class teleOP extends OpMode {
                 driver.leftStickY(), driver.leftStickX(), driver.rightStickX()
         );
 
-        if (driver.aToggle()) {
-            intake.onIntake();
-        } else {
-            intake.offIntake();
-        }
-
         if (driver.bToggle()) {
             shooter.onShooter();
         } else {
             shooter.offShooter();
         }
 
+        if (driver.aToggle()) {
+            intake.onIntake();
+        } else {
+            intake.offIntake();
+        }
+
+        if (driver.yPressed()) { target += 5; shooter.setTarget(target); }
+        if (driver.xPressed()) { target -= 5; shooter.setTarget(target); }
+
         shooter.loop();
+
+
 
         telemetry.addData("Intake - currentTicks", intake.currentTicks);
         telemetry.addData("Target RPM", Shooter.target);
         telemetry.addData("Current RPM", shooter.currentRPM);
         telemetry.addData("Error RPM", shooter.errorRPM);
 
+ 
         follower.update();
         telemetry.update();
     }

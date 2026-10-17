@@ -53,7 +53,7 @@ public class Intake implements EasySubsystem {
     @Override
     public void init(HardwareMap hardwareMap) {
         intake_motor_front = new EasyMotor(hardwareMap, "intake_motor_front").reversed();
-        intake_motor_back = new EasyMotor(hardwareMap, "intake_motor_back");
+        intake_motor_back = new EasyMotor(hardwareMap, "intake_motor_back").reversed();
         intake_motors = new EasyMotorGroup(intake_motor_front, intake_motor_back)
                 .setEncoderStrategy(EasyMotorGroup.EncoderStrategy.LEADER_ONLY)
                 .brakeMode()
