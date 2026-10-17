@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import dev.easyfamily.easystack.control.PIDFCoefficients;
@@ -10,6 +9,8 @@ import dev.easyfamily.easystack.hardware.Motors.EasyMotor;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotorType;
 import dev.easyfamily.easystack.hardware.Servo.EasyServo;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
+import dev.easyfamily.easystack.util.InterpLUT;
+
 
 public class Shooter implements EasySubsystem {
 
@@ -18,11 +19,13 @@ public class Shooter implements EasySubsystem {
     public double currentRPM = 0.0;
     public double currentTicks = 0.0;
     public double errorRPM = 0.0;
-    public static double target = 3000;
+    public static double target = 0;
 
     public static double KP = 0.001;
     public static double KV = 0.00019;
     public static double KS = 0.09;
+
+    private InterpLUT shooterVelocity;
 
     public void onShooter() {
         shooter_motor.setRPM(target);
@@ -38,10 +41,27 @@ public class Shooter implements EasySubsystem {
 
     }
 
+    public void lut() {
+        shooterVelocity.add(20, 2000);
+        shooterVelocity.add(40, 2200);
+        shooterVelocity.add(60, 2400);
+        shooterVelocity.add(80, 2600);
+        shooterVelocity.add(100, 2800);
+        shooterVelocity.add(120, 3000);
+        shooterVelocity.add(140, 3200);
+        shooterVelocity.createLUT();
+    }
+
+    public void setTarget(double rpm)
+    {
+        target = rpm;
+    }
+
     @Override
     public void init(HardwareMap hardwareMap) {
-        shooter_motor = new EasyMotor(hardwareMap, "shooter_motor", EasyMotorType.REV_HD_NAKED);
-       // block_servo = new EasyServo(hardwareMap, "block_servo");
+        shooter_motor = new EasyMotor(hardwareMap, "shooterMaster", EasyMotorType.REV_HD_NAKED)
+                .reverse();
+        //block_servo = new EasyServo(hardwareMap, "block_servo");
         //configurePIDF();
 
     }
@@ -53,10 +73,5 @@ public class Shooter implements EasySubsystem {
         errorRPM = shooter_motor.getRPMError();
 
         configurePIDF();
-    }
-
-    public void setTarget(double Target)
-    {
-        target = Target;
     }
 }
