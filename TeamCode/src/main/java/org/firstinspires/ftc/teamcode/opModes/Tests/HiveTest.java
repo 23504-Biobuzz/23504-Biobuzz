@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes;
+package org.firstinspires.ftc.teamcode.opModes.Tests;
 
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
@@ -54,7 +54,6 @@ public class HiveTest extends OpMode {
     {
         follower.update();
         //tracker.update();
-
         if (driver.aPressed())
         {
             chasing = true;

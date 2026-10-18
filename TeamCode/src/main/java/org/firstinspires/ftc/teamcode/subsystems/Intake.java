@@ -15,9 +15,7 @@ public class Intake implements EasySubsystem {
 
     public double currentTicks;
 
-    public EasyMotor intake_motor_front;
-    public EasyMotor intake_motor_back;
-    public EasyMotorGroup intake_motors;
+    public EasyMotor intake_motor;
 
     public EasyRevColorSensorV3 color_sensor_left;
     public EasyRevColorSensorV3 color_sensor_right;
@@ -35,15 +33,15 @@ public class Intake implements EasySubsystem {
     private static final double DETECTION_DISTANCE_CM = 2.75;
 
     public void onIntake() {
-        intake_motors.setPower(1);
+        intake_motor.setPower(1);
     }
 
     public void offIntake() {
-        intake_motors.setPower(0);
+        intake_motor.setPower(0);
     }
 
     public double getVelocity() {
-        return intake_motors.getVelocity();
+        return intake_motor.getVelocity();
     }
 
     public double getDistanceLeft() {
@@ -52,12 +50,7 @@ public class Intake implements EasySubsystem {
 
     @Override
     public void init(HardwareMap hardwareMap) {
-        intake_motor_front = new EasyMotor(hardwareMap, "intake_motor_front").reversed();
-        intake_motor_back = new EasyMotor(hardwareMap, "intake_motor_back");
-        intake_motors = new EasyMotorGroup(intake_motor_front, intake_motor_back)
-                .setEncoderStrategy(EasyMotorGroup.EncoderStrategy.LEADER_ONLY)
-                .brakeMode()
-                .setLeaderMotor(0);
+        intake_motor = new EasyMotor(hardwareMap, "intake_motor_front").reversed();
 /*
         color_sensor_left = new EasyRevColorSensorV3(hardwareMap, "color_sensor_left", DistanceUnit.CM);
 
