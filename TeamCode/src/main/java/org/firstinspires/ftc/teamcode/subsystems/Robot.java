@@ -6,30 +6,34 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
 import dev.easyfamily.easystack.util.Point;
 
-public class Robot implements EasySubsystem {
+public class Robot {
 
-    public Follower follower;
     public double distance;
+
 
     public enum Alliance {
         RED,
         BLUE
+
     }
 
     //Posição das celulas
-    private static final Point RED_1 = new Point(58, 54);
-    private static final Point RED_2 = new Point(58, 88);
+    private static final Point RED_1 = new Point(48, 48);
+    private static final Point RED_2 = new Point(48, 86);
 
-    private static final Point BLUE_1 = new Point(84, 54);
-    private static final Point BLUE_2 = new Point(84, 88);
+    private static final Point BLUE_1 = new Point(74, 86);
+    private static final Point BLUE_2 = new Point(74, 48);
 
 
     // Valores padrão
+
     private static Alliance alliance = Alliance.RED;
+
     private static Point targetCell = RED_1;
 
+
     // Metodo para setar a aliaça no inicio
-    public void setAlliance(Alliance newAlliance) {
+    public static void setAlliance(Alliance newAlliance) {
         alliance = newAlliance;
 
         if (alliance == Alliance.RED) {
@@ -39,7 +43,9 @@ public class Robot implements EasySubsystem {
         }
     }
 
-    public static Point autoAim(double robotX, double robotY) {
+
+
+    public static Point getClosestCell(double robotX, double robotY) {
 
         if (alliance == Alliance.RED) {
 
@@ -69,28 +75,21 @@ public class Robot implements EasySubsystem {
         return targetCell;
     }
 
+
     public static double distanceToCell(double robotX, double robotY) {
 
         // Pega a célula que está mais perto
-        Point cell = autoAim(robotX, robotY);
+        Point cell = getClosestCell(robotX, robotY);
 
         // Pega a posição atual e a célula que ta mais perto e retorna a distância
         return Math.hypot(robotX - cell.x(), robotY - cell.y());
 
     }
 
+
     public static Alliance getTargetAlliance() {
         return alliance;
     }
 
 
-    @Override
-    public void init(HardwareMap hardwareMap) {
-
-    }
-
-    @Override
-    public void loop() {
-
-    }
 }
