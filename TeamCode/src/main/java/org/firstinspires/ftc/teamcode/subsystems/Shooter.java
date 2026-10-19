@@ -124,7 +124,7 @@ public class Shooter implements EasySubsystem {
     public void loopShooterLEd() // ***********************************************************
     {
 
-        if (currentRPM <= rpmTolerence) {
+        if (Math.abs( target ) <= rpmTolerence) {
 
             LedShooterGuloso.setPosition(1);
         } else {
