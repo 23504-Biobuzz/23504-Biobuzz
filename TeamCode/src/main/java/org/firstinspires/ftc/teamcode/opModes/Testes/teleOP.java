@@ -37,7 +37,7 @@ public class teleOP extends OpMode {
         follower.manual(
                 -driver.leftStickY(), -driver.leftStickX(), -driver.rightStickX()
         );
-
+/*
         if (driver.leftTrigger() > 0.1 || driver.rightTrigger() > 0.1) {
             if (driver.rightTrigger() > 0.1) {
                 intake.openFeeder();
@@ -48,6 +48,14 @@ public class teleOP extends OpMode {
         } else {
             intake.offIntake();
             intake.lockFeeder();
+        }
+
+ */
+
+        if (driver.leftTrigger() > 0.1) {
+            intake.onIntake();
+        } else {
+            intake.offIntake();
         }
 
         if (driver.bToggle()) {

@@ -34,15 +34,17 @@ public class Intake implements EasySubsystem {
     public boolean full = false;
     public boolean detected = false;
     private long detectedSince = -1;
-    private final long confirm = 250;
+    private final long confirm = 175;
     private static final double DETECTION_DISTANCE_CM = 2.67;
 
     // PID
     public static double KP = 0.01;
-    public static double KV = 0.000162;
+    public static double KV = 11;
     public static double KS = 0.11;
 
-    public static double target = 0;
+    public static double target = 3000;
+
+    public static double position = 0;
 
 
 
@@ -94,10 +96,7 @@ public class Intake implements EasySubsystem {
         color_sensor_left = new EasyRevColorSensorV3(hardwareMap, "color_sensor_left", DistanceUnit.CM);
         color_sensor_right = new EasyRevColorSensorV3(hardwareMap, "color_sensor_right", DistanceUnit.CM);
 
-        trava = new EasyServo(hardwareMap, "feeder")
-                .setLimits(0.6, 1.0)
-                .addState("Closed", 0)
-                .addState("Open", 1.0);
+        trava = new EasyServo(hardwareMap, "feeder");
 
         led.init(hardwareMap);
     }
@@ -105,6 +104,7 @@ public class Intake implements EasySubsystem {
     @Override
     public void loop() {
         currentTicks = getVelocity();
+        trava.setPosition(position);
         configurePIDF();
         updateDetection();
     }

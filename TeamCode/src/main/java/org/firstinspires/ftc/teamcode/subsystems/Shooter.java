@@ -85,10 +85,9 @@ public class Shooter implements EasySubsystem {
     @Override
     public void init(HardwareMap hardwareMap) {
 
-        shooter_motor = new EasyMotor(hardwareMap, "shooterMaster", EasyMotorType.REV_HD_NAKED)
-                .reverse();
+        shooter_motor = new EasyMotor(hardwareMap, "shooterMaster", EasyMotorType.REV_HD_NAKED);
 
-         LedShooterGuloso = new EasyServo(hardwareMap, "ledShooter"); // **************************************
+       //  LedShooterGuloso = new EasyServo(hardwareMap, "ledShooter"); // **************************************
 
        // hoodServo = new EasyServo(hardwareMap, "hood");
 
@@ -101,7 +100,7 @@ public class Shooter implements EasySubsystem {
         currentTicks = shooter_motor.getVelocity();
         errorRPM = shooter_motor.getRPMError();
 
-        loopShooterLEd(); // **************************************************
+       // loopShooterLEd(); // **************************************************
 
         configurePIDF();
     }
