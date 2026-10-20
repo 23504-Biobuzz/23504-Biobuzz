@@ -132,6 +132,36 @@ public class Limelight implements EasySubsystem {
         result = limelight.getLatestResult();
     }
 
+    // Seguimento Manual
+    private LLResultTypes.DetectorResult getNearest()
+    {
+        if (!seeingElement()) return null;
+
+        LLResultTypes.DetectorResult nearest = null;
+        for (LLResultTypes.DetectorResult detec : result.getDetectorResults())
+        {
+            if (nearest == null || detec.getTargetArea() > nearest.getTargetArea())
+            {
+                if ("yellow_pollen".equals(detec.getClassName())) nearest = detec;
+            }
+        }
+        return nearest;
+    }
+
+    public double nearestTx()
+    {
+        LLResultTypes.DetectorResult nearest = getNearest();
+        if (nearest == null) return Double.NaN;
+        return nearest.getTargetXDegrees();
+    }
+
+    public double nearestTa()
+    {
+        LLResultTypes.DetectorResult nearest = getNearest();
+        if (nearest == null) return Double.NaN;
+        return nearest.getTargetArea();
+    }
+
     // Comandos
     public Command chaserCommand()
     {
