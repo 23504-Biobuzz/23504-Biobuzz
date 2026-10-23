@@ -468,7 +468,7 @@ class TestsPose extends TuningOpMode<Boolean> {
         Localizer localizer = localizerFunction.apply(hardwareMap);
         Thread.sleep(1000);
         waitForStart();
-        localizer.setPose(Pose.zero());
+        localizer.setPose(new Pose(6.5, 7.5, Math.toRadians(90)));
         localizer.update();
         while (opModeIsActive()) {
             localizer.update();

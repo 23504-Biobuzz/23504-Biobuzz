@@ -18,11 +18,11 @@ public class Robot {
     }
 
     //Posição das celulas
-    private static final Point RED_1 = new Point(48, 48);
-    private static final Point RED_2 = new Point(48, 86);
+    private static final Point RED_1 = new Point(58, 58);
+    private static final Point RED_2 = new Point(58, 86);
 
-    private static final Point BLUE_1 = new Point(74, 86);
-    private static final Point BLUE_2 = new Point(74, 48);
+    private static final Point BLUE_1 = new Point(84, 58);
+    private static final Point BLUE_2 = new Point(84, 84);
 
 
     // Valores padrão

@@ -20,9 +20,7 @@ public class Intake implements EasySubsystem {
     public double currentTicks;
 
     public double mediaDistancia;
-    public EasyMotor intake_motor_front;
-    public EasyMotor intake_motor_side;
-    public EasyMotorGroup intake_motors;
+    public EasyMotor intake_motor;
     Led led = new Led();
 
     public EasyServo trava;
@@ -44,16 +42,17 @@ public class Intake implements EasySubsystem {
 
     public static double target = 3000;
 
-    public static double position = 0;
-
-
 
     public void onIntake() {
-        intake_motors.setRPM(target);
+        intake_motor.setPower(1);
     }
 
     public void offIntake() {
-        intake_motors.setPower(0);
+        intake_motor.setRPM(0);
+    }
+
+    public void eject() {
+        intake_motor.setPower(-1);
     }
 
     public void lockFeeder() {
@@ -64,9 +63,8 @@ public class Intake implements EasySubsystem {
         trava.setState("Open");
     }
 
-
     public double getVelocity() {
-        return intake_motors.getVelocity();
+        return intake_motor.getVelocity();
     }
 
     public double getDistanceLeft() {
@@ -77,34 +75,35 @@ public class Intake implements EasySubsystem {
         return color_sensor_right.getDistance(DistanceUnit.CM);
     }
 
+    public void configureServo(double position) {
+        trava.setPosition(position);
+    }
+
     private void configurePIDF() {
         // Mover pra o init quando terminar de calibrar
-        intake_motors.setVelocityPIDF(new PIDFCoefficients(KP, 0, 0, 0));
-        intake_motors.setVelocityFF(new FFController(KS, KV));
+        intake_motor.setVelocityFF(new FFController(KS, KV));
 
     }
 
     @Override
     public void init(HardwareMap hardwareMap) {
-        intake_motor_front = new EasyMotor(hardwareMap, "intake_motor_front");
-        intake_motor_side = new EasyMotor(hardwareMap, "intake_motor_side").reversed();
-        intake_motors = new EasyMotorGroup(intake_motor_front, intake_motor_side)
-                .setEncoderStrategy(EasyMotorGroup.EncoderStrategy.LEADER_ONLY)
-                .brakeMode()
-                .setLeaderMotor(0);
+
+        intake_motor = new EasyMotor(hardwareMap, "intake_motor").reversed();
 
         color_sensor_left = new EasyRevColorSensorV3(hardwareMap, "color_sensor_left", DistanceUnit.CM);
         color_sensor_right = new EasyRevColorSensorV3(hardwareMap, "color_sensor_right", DistanceUnit.CM);
 
-        trava = new EasyServo(hardwareMap, "feeder");
+        trava = new EasyServo(hardwareMap, "feeder")
+                .addState("Closed", 0.15)
+                .addState("Open", 1);
 
         led.init(hardwareMap);
+
     }
 
     @Override
     public void loop() {
         currentTicks = getVelocity();
-        trava.setPosition(position);
         configurePIDF();
         updateDetection();
     }
@@ -114,7 +113,6 @@ public class Intake implements EasySubsystem {
         telemetry.addData("Detected?", detected);
         telemetry.addData("Média", mediaDistancia);
     }
-
 
 
     /**

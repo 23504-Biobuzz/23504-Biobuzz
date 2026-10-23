@@ -22,8 +22,8 @@ public class Turret implements EasySubsystem {
 
 
     // PID
-    public static double KP = 0.0022;
-    public static double KD = 0.00002;
+    public static double KP = 0.0011;
+    public static double KD = 0.00004;
     public static double KI = 0;
 
 
@@ -37,7 +37,7 @@ public class Turret implements EasySubsystem {
 
 
     /** METODOS de Convercao */
-    private int degreesToTicks(double degrees) {
+    public int degreesToTicks(double degrees) {
         return (int) Math.round((degrees / 360.0) * TICKS_PER_TURRET_REV);
     }
 
@@ -64,7 +64,7 @@ public class Turret implements EasySubsystem {
     public void alignTurretWithOdometryMotion(Follower follower, Point Goal) {
         double headingRadianos = follower.pose().heading();
 
-        double x = follower.pose().x();
+        double x = follower.pose().x() + 1; // +1 pra ajustar o angulo torto a esquerda
         double y = follower.pose().y();
 
         double headingDeg = Math.toDegrees(headingRadianos);
@@ -89,7 +89,7 @@ public class Turret implements EasySubsystem {
     public void alignTurretWithOdometry(Follower follower, Point Goal) {
         double headingRadianos = follower.pose().heading();
 
-        double x = follower.pose().x();
+        double x = follower.pose().x() + 1; // +1 pra ajustar o angulo torto a esquerda
         double y = follower.pose().y();
 
         double headingDeg = Math.toDegrees(headingRadianos);
@@ -106,7 +106,9 @@ public class Turret implements EasySubsystem {
 
     }
 
-
+    public void setPower(double power) {
+        turret_motor.setPower(power);
+    }
     public void resetEncoder() {
         turret_motor.stopAndResetEncoder();
     }

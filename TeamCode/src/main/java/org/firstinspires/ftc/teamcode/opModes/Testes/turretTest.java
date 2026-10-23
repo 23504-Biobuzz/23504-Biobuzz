@@ -21,7 +21,7 @@ public class turretTest extends OpMode {
     Follower follower;
     Turret turret = new Turret();
     public static double position = 0;
-    EasyGamepad driver;
+    EasyGamepad driver; //vai se fuder rufino, depois tu vai ver essa porra caralho.
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose waitAprilTagAndShoot = poseFactory.of(0, 0, 0);
@@ -51,7 +51,7 @@ public class turretTest extends OpMode {
         double y = follower.pose().y();
         double heading = follower.pose().heading();
 
-        double headingGraus = Math.toDegrees(follower.pose().heading());
+
 
         follower.manual(
                 -driver.leftStickY(), -driver.leftStickX(), -driver.rightStickX()
@@ -59,7 +59,7 @@ public class turretTest extends OpMode {
 
         Point celulaAtual = Robot.getClosestCell(x, y);
 
-        turret.alignTurretWithOdometry(follower, celulaAtual);
+        turret.moveToPosition(turret.degreesToTicks(position));
 
         telemetry.addData("Current (deg)", turret.getCurrentDegrees());
         telemetry.addData("Current (ticks)", turret.currentTicks);

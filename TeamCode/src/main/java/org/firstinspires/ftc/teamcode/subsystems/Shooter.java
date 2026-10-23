@@ -7,6 +7,7 @@ import dev.easyfamily.easystack.control.PIDFCoefficients;
 import dev.easyfamily.easystack.feedforward.FFCoefficients;
 import dev.easyfamily.easystack.feedforward.FFController;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotor;
+import dev.easyfamily.easystack.hardware.Motors.EasyMotorGroup;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotorType;
 import dev.easyfamily.easystack.hardware.Servo.EasyServo;
 import dev.easyfamily.easystack.subsytem.EasySubsystem;
@@ -15,8 +16,9 @@ import dev.easyfamily.easystack.util.InterpLUT;
 @Config
 public class Shooter implements EasySubsystem {
 
-    private EasyMotor shooter_motor;
-
+    private EasyMotor shooter_left;
+    private EasyMotor shooter_right;
+    private EasyMotorGroup shooter_motors;
     private EasyServo hoodServo;
 
     private EasyServo LedShooterGuloso; // **********************************
@@ -35,74 +37,62 @@ public class Shooter implements EasySubsystem {
 
 
     // PID
-    public static double KP = 0.01;
-    public static double KV = 0.000162;
-    public static double KS = 0.12;
+    public static double KP = 0.001; //0.001
+    public static double KV = 0.000215; //0.00019
+    public static double KS = 0.1;
+
+    public static double position = 0.55;
 
 
     // Lupt de rpm
-    private InterpLUT shooterVelocity;
+    public InterpLUT shooterVelocity = new InterpLUT();
 
-    private InterpLUT hoodAngleLut;
+    public InterpLUT hoodAngleLut = new InterpLUT();
 
 
     // Ftc DashBoard Tunning Methods
     public void onShooter() {
-        shooter_motor.setRPM(target + RPMoffset);
-    }
-
-    public void setServoPosition(double servoPositionChoosed){
-        hoodServo.setPosition(servoPositionChoosed);
+        shooter_motors.setRPM(target + RPMoffset);
     }
 
     public void offShooter() {
-        shooter_motor.setPower(0);
+        shooter_motors.setPower(0);
     }
-
-
-
-
 
 
     // Metodo pra usar a interpolacao cubica  de hermite com tangentes limitadas no RPM
-    public void setRpmByDistance(double distance){
-        shooter_motor.setRPM(shooterVelocity.get(distance) + RPMoffset);
-    }
-
-
-    public void setHoodByDistance(double distance){
+    public void setShooter(double distance) {
+        shooter_motors.setRPM(shooterVelocity.get(distance) + RPMoffset);
         hoodServo.setPosition(hoodAngleLut.get(distance));
     }
-
-
-
-
-
-
 
 
     /** Metodos do Easy */
     @Override
     public void init(HardwareMap hardwareMap) {
 
-        shooter_motor = new EasyMotor(hardwareMap, "shooterMaster", EasyMotorType.REV_HD_NAKED);
+        shooter_left = new EasyMotor(hardwareMap, "shooter_left", EasyMotorType.REV_HD_NAKED);
+        shooter_right = new EasyMotor(hardwareMap, "shooter_right", EasyMotorType.REV_HD_NAKED);
+        shooter_motors = new EasyMotorGroup(shooter_left, shooter_right).setLeaderMotor(0);
 
        //  LedShooterGuloso = new EasyServo(hardwareMap, "ledShooter"); // **************************************
 
-       // hoodServo = new EasyServo(hardwareMap, "hood");
+        hoodServo = new EasyServo(hardwareMap, "hood");
+        lut();
 
     }
 
 
     @Override
     public void loop() {
-        currentRPM = shooter_motor.getRPM();
-        currentTicks = shooter_motor.getVelocity();
-        errorRPM = shooter_motor.getRPMError();
+        currentRPM = shooter_motors.getRPM();
+        currentTicks = shooter_motors.getVelocity();
 
        // loopShooterLEd(); // **************************************************
 
         configurePIDF();
+
+
     }
 
 
@@ -110,12 +100,8 @@ public class Shooter implements EasySubsystem {
 
     /** Metodos de configuracao */
     private void configurePIDF() {
-        // Mover pra o init quando terminar de calibrar
-        shooter_motor.setVelocityPIDF(new PIDFCoefficients(KP, 0, 0, 0));
-        shooter_motor.setVelocityFF(new FFController(KS, KV));
-
-        // TIRAR isso aqui quando terminar a calibracao
-       // setServoPosition(servoPosition);
+        shooter_motors.setVelocityFF(new FFController(KS, KV));
+        shooter_motors.setVelocityPIDF(new PIDFCoefficients(KP, 0, 0, 0));
 
     }
 
@@ -135,26 +121,21 @@ public class Shooter implements EasySubsystem {
 
 
 
-    public void lutShooter() {
-        shooterVelocity.add(20, 0);
-        shooterVelocity.add(40, 0);
-        shooterVelocity.add(60, 0);
-        shooterVelocity.add(80, 0);
-        shooterVelocity.add(100, 0);
-        shooterVelocity.add(120, 0);
-        shooterVelocity.add(140, 0);
+    public void lut() {
+        shooterVelocity.add(70.0, 3500.0);
+        shooterVelocity.add(60.0, 3300.0);
+        shooterVelocity.add(50.0, 3000.0);
+        shooterVelocity.add(40.0, 2900.0);
+        shooterVelocity.add(30.0, 2900.0);
+        shooterVelocity.add(20.0, 2900.0);
         shooterVelocity.createLUT();
-    }
 
-
-    public void lutHood() {
-        hoodAngleLut.add(20, 0);
-        hoodAngleLut.add(40, 0);
-        hoodAngleLut.add(60, 0);
-        hoodAngleLut.add(80, 0);
-        hoodAngleLut.add(100, 0);
-        hoodAngleLut.add(120, 0);
-        hoodAngleLut.add(140, 0);
+        hoodAngleLut.add(70.0, 0.0);
+        hoodAngleLut.add(60.0, 0.0);
+        hoodAngleLut.add(50.0, 0.0);
+        hoodAngleLut.add(40.0, 0.0);
+        hoodAngleLut.add(30.0, 0.2);
+        hoodAngleLut.add(20.0, 0.5);
         hoodAngleLut.createLUT();
     }
 }

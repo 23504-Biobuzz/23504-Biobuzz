@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import dev.easyfamily.easystack.control.wpiLibControllers.EasyElevatorFeedforward;
 import dev.easyfamily.easystack.hardware.Motors.EasyMotor;
@@ -13,42 +14,40 @@ import dev.easyfamily.easystack.subsytem.EasySubsystem;
 public class Flower implements EasySubsystem {
 
     // Instancias
-    private EasyServo servo_left;
     private EasyServo servo_right;
-    public EasyServoGroup flower;
+
 
     // position
-    public static double servoFLowerValue = 0;
+    public static double servoFLowerValue;
 
 
     @Override
     public void init(HardwareMap hardwareMap) {
-        servo_left = new EasyServo(hardwareMap, "servo_left");
-        servo_right = new EasyServo(hardwareMap, "servo_right");
-        flower = new EasyServoGroup(servo_left, servo_right);
+        servo_right = new EasyServo(hardwareMap, "right_servo_flower");
 
-        flower.addState("collect", 0.1);
-        flower.addState("retracted", 0.5);
+        servo_right.addState("collect", 0.55);
+        servo_right.addState("retracted", 1);
+
     }
 
 
     @Override
     public void loop() {
-        setServoPosition();
+
     }
 
 
 
     public void setServoPosition() {
-        flower.setPosition(servoFLowerValue);
+        servo_right.setPosition(servoFLowerValue);
     }
 
     public void retractFlower(){
-        flower.setState("retracted");
+        servo_right.setState("retracted");
     }
 
     public void collectFlower(){
-        flower.setState("collect");
+        servo_right.setState("collect");
     }
 
 
