@@ -19,8 +19,8 @@ import dev.easyfamily.easystack.subsytem.EasySubsystem;
 
 public class Limelight implements EasySubsystem {
     // Limelight
-    private static Limelight3A limelight;
-    private static LLResult result;
+    private Limelight3A limelight;
+    private LLResult result;
     private static final String NAME = "limelight";
     private static final int PIPELINE = 5;
     private static final int POLL_RATE = 50;
@@ -77,10 +77,12 @@ public class Limelight implements EasySubsystem {
 
     public List<LLResultTypes.FiducialResult> getSelectedTags()
     {
-       if (!seeingAprilTag()) return null;
 
        List<LLResultTypes.FiducialResult> selected = new ArrayList<>();
-       int[] ids;
+
+        if (!seeingAprilTag()) return selected;
+
+        int[] ids;
 
        if (alliance == Alliance.RED)
        {
