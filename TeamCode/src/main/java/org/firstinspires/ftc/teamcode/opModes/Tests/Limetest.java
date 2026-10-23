@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.opModes.Tests;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
-@Config
 @TeleOp(name = "LimeTest")
 public class Limetest extends OpMode {
     Limelight limelight = new Limelight();

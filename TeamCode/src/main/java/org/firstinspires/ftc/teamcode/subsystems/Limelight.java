@@ -86,11 +86,11 @@ public class Limelight implements EasySubsystem {
 
        if (alliance == Alliance.RED)
        {
-           ids = hive == Hive.FRONT ? RED_1 : RED_2;
+           ids = hive == Hive.FRONT ? RED_2 : RED_1;
        }
        else
        {
-           ids = hive == Hive.FRONT ? BLUE_1 : BLUE_2;
+           ids = hive == Hive.FRONT ? BLUE_2 : BLUE_1;
        }
 
        for (LLResultTypes.FiducialResult tag : result.getFiducialResults())
